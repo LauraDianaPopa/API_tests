@@ -1,17 +1,15 @@
-from urllib import response
-
 from books_api.requests.books import *
 
 class TestBooks:
 
     def test_status_code(self):
-        requests = get_books()
-        assert requests.status_code==200, "Status code should be 200"
+        response = get_books()
+        assert response.status_code == 200, 'Status code should be 200'
 
     def test_books_invalid_type(self):
-        requests = get_books(book_type="adventure")
-        assert requests.status_code ==400, "Status code should be 400"
-        assert requests.json()['error'] == "Invalid value for query parameter 'type'. Must be one of: fiction, non-fiction.", "Wrong error message"
+        response = get_books(book_type='adventure')
+        assert response.status_code == 400, "Status code should be 400"
+        assert response.json()['error'] == "Invalid value for query parameter 'type'. Must be one of: fiction, non-fiction.", "Wrong error message"
 
     def test_get_all_books(self):
         response = get_books()
@@ -24,16 +22,17 @@ class TestBooks:
 
     def test_get_all_books_limit(self):
         response = get_books(limit=4)
-        assert len(response.json()) ==4, "Total number of books should be 3"
+        assert len(response.json()) == 4, "Total number of books should be 3"
         i=1
         for book in response.json():
-            assert book['id'] ==i
-            i==1
+            assert book['id'] == i
+            i+=1
+
 
     def test_all_books_type_fiction(self):
         response = get_books(book_type='fiction')
         for book in response.json():
-            assert book('type') == 'fiction', "Book type should be fiction"
+            assert book['type'] == 'fiction', "Book type should be fiction"
 
     def test_get_all_books_type_limit(self):
         response = get_books(book_type='fiction', limit=2)
